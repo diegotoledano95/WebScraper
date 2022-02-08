@@ -1,9 +1,10 @@
-import csv
 from re import A
 from ssl import Options 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from webdrivermanager.chrome import ChromeDriverManager
+import pandas as pd
+
 
 
 class Item():
@@ -16,7 +17,7 @@ class Scraper:
         count = 1
         page = 1
         nextPage = 10
-        maxItems = 100
+        maxItems = 10
         a = []
 
         url = "https://www.amazon.com.mx/s?k=" + name + "&page=" + str(page)
@@ -46,7 +47,7 @@ class Scraper:
                 itemText = title.get_attribute("innerHTML").splitlines()[0]
                 title.click()
 
-                xPathPrice = '//*[@id="price_inside_box"]'
+                xPathPrice = '//*[@id="corePrice_feature_div"]/div/span/span[2]/span[2]'
                 price = browser.find_element_by_xpath(xPathPrice)
                 priceText = price.get_attribute("innerHTML")
 
@@ -83,11 +84,15 @@ class Scraper:
 
 fetcher = Scraper()
 
-with open('results.csv', 'w', newline ='', encoding = 'utf-8') as csvfile:
-    articlewriter = csv.writer(csvfile, delimiter=';', quotechar = '"', quoting = csv.QUOTE_MINIMAL)
-    for article in fetcher.article('iphone 11'):
-        articlewriter.writerow([article.title , article.price])
-    
+df_results = pd.DataFrame()
+
+
+for article in fetcher.article('iphone 11'):
+    df_results = pd.concat([df_results,pd.DataFrame([article.title , article.price]).T])
+
+
+df_results.columns=['item','price']
+df_results.to_csv('results.csv')
     
 
     
