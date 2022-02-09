@@ -42,7 +42,7 @@ class Scraper:
                     count=1
                     page+=1
                 
-                xPathItem = '//*[@id="search"]/div[1]/div[1]/div/span[3]/div[2]/div[' + str(count) + ']/div/div/div/div/div/div/div[2]/div[1]/h2/a/span'
+                xPathItem = '//*[@id="search"]/div[1]/div[1]/div/span[3]/div[2]/div[' + str(count) + ']/div/div/div/div/div[2]/div[2]/h2/a/span'
                 title = browser.find_element_by_xpath(xPathItem)
                 itemText = title.get_attribute("innerHTML").splitlines()[0]
                 title.click()
@@ -87,13 +87,10 @@ fetcher = Scraper()
 df_results = pd.DataFrame()
 
 
-for article in fetcher.article('iphone 11'):
+for article in fetcher.article('the north face'):
     df_results = pd.concat([df_results,pd.DataFrame([article.title , article.price]).T])
 
 
 df_results.columns=['item','price']
 df_results.to_csv('results.csv')
-
-
-#'//*[@id="corePrice_feature_div"]/div/span/span[2]/span[2]'
 
