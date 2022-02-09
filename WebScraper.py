@@ -17,7 +17,7 @@ class Scraper:
         count = 1
         page = 1
         nextPage = 10
-        maxItems = 10
+        maxItems = 40
         a = []
 
         url = "https://www.amazon.com.mx/s?k=" + name + "&page=" + str(page)
@@ -47,8 +47,8 @@ class Scraper:
                 itemText = title.get_attribute("innerHTML").splitlines()[0]
                 title.click()
 
-                xPathPrice = '//*[@id="corePrice_feature_div"]/div/span/span[2]/span[2]'
-                price = browser.find_element_by_xpath(xPathPrice)
+                xPathPrice = '//*[@id="corePrice_feature_div"]'
+                price = browser.find_element_by_class_name("a-offscreen")
                 priceText = price.get_attribute("innerHTML")
 
 
@@ -76,10 +76,10 @@ class Scraper:
                 url = "https://www.amazon.com.mx/s?k=" + name + "&page=" + str(page)
                 browser.get(url)
                 browser.set_page_load_timeout(10)
-    
+        
         browser.close()
 
-        return a 
+        return a
 
 
 fetcher = Scraper()
@@ -93,13 +93,7 @@ for article in fetcher.article('iphone 11'):
 
 df_results.columns=['item','price']
 df_results.to_csv('results.csv')
-    
-
-    
 
 
-
-
- 
-
+#'//*[@id="corePrice_feature_div"]/div/span/span[2]/span[2]'
 
